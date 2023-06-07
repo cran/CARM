@@ -2,6 +2,7 @@
 #'@importFrom MASS ginv
 #'@importFrom stats median
 #'@importFrom stats na.omit
+#'@importFrom stats var
 #'@import dplyr
 
 
@@ -13,11 +14,20 @@ pairwise_dis<-function(assigndata,p,K,method){
       {
 
         pairwise<-assigndata[which(!is.na(assigndata$assignment)),]
-        u<-colMeans((pairwise[which(pairwise$assignment==s),-1]))-
-          colMeans(as.matrix(pairwise[which(pairwise$assignment==t),-1]))
-        cov<-cov(as.matrix(pairwise[,-1]))
+
+        if (p>1){
+          u<-colMeans((pairwise[which(pairwise$assignment==s),-1]))-
+            colMeans(as.matrix(pairwise[which(pairwise$assignment==t),-1]))
+          cov<-cov(as.matrix(pairwise[,-1]))}
+
+        else{
+          u<-mean((pairwise[which(pairwise$assignment==s),-1]))-
+            mean(as.matrix(pairwise[which(pairwise$assignment==t),-1]))
+          cov<-var(as.matrix(pairwise[,-1]))}
+
         dis<-2/K/K*nrow(pairwise)*(t(u)%*%ginv(cov)%*%u)
         dis_K<-c(dis_K,dis)
+
 
       }
     }
@@ -37,6 +47,7 @@ pairwise_dis<-function(assigndata,p,K,method){
   }
   return(all_dis)
 }
+
 
 
 circle_random<-function(assigndata,K,p,q,method,n){

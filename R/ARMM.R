@@ -3,7 +3,7 @@
 #'@importFrom MASS ginv
 #'@importFrom stats median
 #'@importFrom stats na.omit
-
+#'@importFrom stats var
 #'@export
 #'@title  Adaptive Randomization via Mahalanobis distance for Multi-arm design
 #'
